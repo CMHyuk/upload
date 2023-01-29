@@ -28,16 +28,6 @@ public class BoardController {
     public BoardResponse post(@ModelAttribute BoardRequest request) throws IOException {
         Board board = boardService.save(request);
         List<Image> images = imageService.storeImages(request.getImages(), board.getId());
-        return BoardResponse.builder()
-                .id(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .images(images.stream()
-                        .map(i -> ImageDto.builder()
-                                .uploadName(i.getUploadName())
-                                .storeName(i.getStoreName())
-                                .build())
-                        .collect(toList()))
-                .build();
+        return BoardResponse.toEntity(board, images);
     }
 }
